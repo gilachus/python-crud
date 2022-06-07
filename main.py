@@ -27,7 +27,8 @@ def eliminar():
         consultar()
 
 def cancelar():
-    pass
+    consultar()
+
 def consultar():
     ventana.tblContactos.setRowCount(0)
     indiceControl = 0
@@ -39,6 +40,13 @@ def consultar():
         ventana.tblContactos.setItem(indiceControl, 1, QTableWidgetItem(str(contacto[1])))
         ventana.tblContactos.setItem(indiceControl, 2, QTableWidgetItem(str(contacto[2])))
         indiceControl += 1
+    ventana.TxtID.setText("")
+    ventana.TxtNombre.setText("")
+    ventana.TxtCorreo.setText("")
+    ventana.btnAgregar.setEnable(True)
+    ventana.btnEliminar.setEnable(False)
+    ventana.btnModificar.setEnable(False)
+    ventana.btnCancelar.setEnable(False)
 
 def seleccionar():
     id     = ventana.tblContactos.selectedIndexes()[0].data()
@@ -47,6 +55,10 @@ def seleccionar():
     ventana.txtID.setText(id)
     ventana.txtNombre.setText(nombre)
     ventana.txtCorreo.setText(correo)
+    ventana.btnAgregar.setEnable(False)
+    ventana.btnEliminar.setEnable(True)
+    ventana.btnModificar.setEnable(True)
+    ventana.btnCancelar.setEnable(True)
 
 aplicacion = QtWidgets.QApplication([])
 ventana = uic.loadUi('ventana.ui')
