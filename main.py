@@ -3,21 +3,32 @@ from PyQt5.QtWidgets import *
 import sys 
 import conexion
 
-def agregar():
-    nombre = ventana.txtNombre.text()
-    correo = ventana.txtCorreo.text()
-    objContactos = conexion.contactos()
-    result = objContactos.crearContacto((nombre,correo))
-    consultar()
+def validarCampos():
+    if (ventana.txtNombre.text() == "" or ventana.txtCorreo.text() == ""):
+        alerta=QMessageBox()
+        alerta.setText("Debes llenar los campos")
+        alerta.setIcon(QMessageBox.Information)
+        alerta.exec()
+        return False
+    return True
 
-def editar():
-    id = ventana.txtID.text()
-    if(id):
+def agregar():
+    if (validarCampos()):
         nombre = ventana.txtNombre.text()
         correo = ventana.txtCorreo.text()
         objContactos = conexion.contactos()
-        result = objContactos.editarContacto((nombre,correo,id))
+        result = objContactos.crearContacto((nombre,correo))
         consultar()
+
+def editar():
+    if (validarCampos()):
+        id = ventana.txtID.text()
+        if (id):
+            nombre = ventana.txtNombre.text()
+            correo = ventana.txtCorreo.text()
+            objContactos = conexion.contactos()
+            result = objContactos.editarContacto((nombre,correo,id))
+            consultar()
 
 def eliminar(): 
     id = ventana.txtID.text()
@@ -40,13 +51,13 @@ def consultar():
         ventana.tblContactos.setItem(indiceControl, 1, QTableWidgetItem(str(contacto[1])))
         ventana.tblContactos.setItem(indiceControl, 2, QTableWidgetItem(str(contacto[2])))
         indiceControl += 1
-    ventana.TxtID.setText("")
-    ventana.TxtNombre.setText("")
-    ventana.TxtCorreo.setText("")
-    ventana.btnAgregar.setEnable(True)
-    ventana.btnEliminar.setEnable(False)
-    ventana.btnModificar.setEnable(False)
-    ventana.btnCancelar.setEnable(False)
+    ventana.txtID.setText("")
+    ventana.txtNombre.setText("")
+    ventana.txtCorreo.setText("")
+    ventana.btnAgregar.setEnabled(True)
+    ventana.btnEliminar.setEnabled(False)
+    ventana.btnEditar.setEnabled(False)
+    ventana.btnCancelar.setEnabled(False)
 
 def seleccionar():
     id     = ventana.tblContactos.selectedIndexes()[0].data()
@@ -55,10 +66,10 @@ def seleccionar():
     ventana.txtID.setText(id)
     ventana.txtNombre.setText(nombre)
     ventana.txtCorreo.setText(correo)
-    ventana.btnAgregar.setEnable(False)
-    ventana.btnEliminar.setEnable(True)
-    ventana.btnModificar.setEnable(True)
-    ventana.btnCancelar.setEnable(True)
+    ventana.btnAgregar.setEnabled(False)
+    ventana.btnEliminar.setEnabled(True)
+    ventana.btnEditar.setEnabled(True)
+    ventana.btnCancelar.setEnabled(True)
 
 aplicacion = QtWidgets.QApplication([])
 ventana = uic.loadUi('ventana.ui')
